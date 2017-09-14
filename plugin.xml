@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova.plugin.devzip" version="0.0.1" 
+    xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <name>DevZip</name>
+    <js-module name="DevZip" src="www/DevZip.js">
+        <clobbers target="cordova.plugins.DevZip" />
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="DevZip">
+                <param name="android-package" value="cordova.plugin.devzip.DevZip" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+        <source-file src="src/android/DevZip.java" target-dir="src/cordova/plugin/devzip" />
+    </platform>
+</plugin>

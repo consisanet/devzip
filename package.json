@@ -1,0 +1,17 @@
+{
+  "name": "cordova.plugin.devzip",
+  "version": "0.0.1",
+  "description": "Decompress bytearray zip file",
+  "cordova": {
+    "id": "cordova.plugin.devzip",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Devionn",
+  "license": "ISC"
+}
