@@ -12,8 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -59,5 +61,15 @@ public class DevZip extends CordovaPlugin {
         Uri tmpTarget = Uri.parse(arg);
         return resourceApi.remapUri(
                 tmpTarget.getScheme() != null ? tmpTarget : Uri.fromFile(new File(arg)));
+    }
+
+    public static byte[] compress(String string) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream(string.length());
+        GZIPOutputStream gos = new GZIPOutputStream(os);
+        gos.write(string.getBytes());
+        gos.close();
+        byte[] compressed = os.toByteArray();
+        os.close();
+        return compressed;
     }
 }
