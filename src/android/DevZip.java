@@ -67,13 +67,17 @@ public class DevZip extends CordovaPlugin {
                 tmpTarget.getScheme() != null ? tmpTarget : Uri.fromFile(new File(arg)));
     }
 
-    private byte[] compress(String string) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream(string.length());
-        GZIPOutputStream gos = new GZIPOutputStream(os);
-        gos.write(string.getBytes());
-        gos.close();
-        byte[] compressed = os.toByteArray();
-        os.close();
-        return compressed;
+    private void compress(String string,CallbackContext callbackContext){
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream(string.length());
+            GZIPOutputStream gos = new GZIPOutputStream(os);
+            gos.write(string.getBytes());
+            gos.close();
+            byte[] compressed = os.toByteArray();
+            os.close();
+            callbackContext.success(compressed);
+        }catch(Exception e){
+            callbackContext.error(e.getMessage());
+        }
     }
 }
