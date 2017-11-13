@@ -30,6 +30,10 @@ public class DevZip extends CordovaPlugin {
             byte[] zipFile = args.getArrayBuffer(0);
             this.decompressToString(zipFile, callbackContext);
             return true;
+        }else if ("compress".equals(action)) {
+            byte[] zipFile = args.getArrayBuffer(0);
+//            this.compress(zipFile, callbackContext);
+            return true;
         }
         return false;
     }
@@ -63,7 +67,7 @@ public class DevZip extends CordovaPlugin {
                 tmpTarget.getScheme() != null ? tmpTarget : Uri.fromFile(new File(arg)));
     }
 
-    public static byte[] compress(String string) throws IOException {
+    private byte[] compress(String string) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream(string.length());
         GZIPOutputStream gos = new GZIPOutputStream(os);
         gos.write(string.getBytes());
