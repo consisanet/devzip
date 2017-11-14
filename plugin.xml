@@ -23,11 +23,9 @@
             <feature name="DevZip">
                 <param name="ios-package" value="DevZip" />
             </feature>
-            <feature name="SSZipArchive">
-                <param name="ios-package" value="SSZipArchive" />
-            </feature>
         </config-file>
         <source-file src="src/ios/DevZip.m" />
         <source-file src="src/lib/SSZipArchive/SSZipArchive.h" />
+        <source-file src="src/lib/SSZipArchive/SSZipCommon.h" />
     </platform>
 </plugin>
