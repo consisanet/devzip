@@ -1,7 +1,7 @@
 /********* DevZip.m Cordova Plugin Implementation *******/
 
 #import <Cordova/CDV.h>
-#import "ZipArchive/SSZipArchive.h"
+#import "SSZipArchive.h"
 
 @interface DevZip : CDVPlugin {
   // Member variables go here.
