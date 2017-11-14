@@ -5,12 +5,14 @@
   "cordova": {
     "id": "cordova.plugin.devzip",
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   },
   "keywords": [
     "ecosystem:cordova",
-    "cordova-android"
+    "cordova-android",
+    "cordova-ios"
   ],
   "author": "Devionn",
   "license": "ISC"
