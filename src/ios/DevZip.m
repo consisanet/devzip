@@ -1,7 +1,7 @@
 /********* DevZip.m Cordova Plugin Implementation *******/
 
 #import <Cordova/CDV.h>
-#import "SSZipArchive.h"
+#import "GzipInputStream.h"
 
 @interface DevZip : CDVPlugin {
   // Member variables go here.
@@ -14,51 +14,58 @@
 
 - (void)decompressToString:(CDVInvokedUrlCommand*)command
 {
-    // CDVPluginResult* pluginResult = nil;
-    char *zipFile[] = [command.arguments objectAtIndex:0];
-
     //converte de bytearray para NSData
-    NSData *arquivo = [NSData dataWithBytes: zipFile length: [zipFile length]];    
-
-    NSFileManager *filemgr;
-    NSString *currentpath;
-
-    filemgr = [[NSFileManager alloc] init];
-
-    currentpath = [filemgr currentDirectoryPath];
-    currentpath = [currentpath stringByAppendingString:@"/file.zip"]
+    NSData* data = [NSData dataWithBytes:[[command.arguments objectAtIndex:0] bytes] length:[[command.arguments objectAtIndex:0] length]];
+    
+    //Monta o caminho para salvar o .gzip
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *zipPath = [documentsDirectory stringByAppendingPathComponent:@"file.gz"];
 
     //grava o arquivo em disco
-    BOOL salvo = [data writeToFile:currentpath atomically:YES]
-
+    BOOL salvo = [data writeToFile:zipPath atomically:YES];
+    
     if (salvo) {
-        //extrai para o arquivo file.json
-        NSString *unzipPath;
-        unzipPath = [filemgr currentDirectoryPath];
-        unzipPath = [currentpath stringByAppendingString:@"/file.json"]
         
-        // Unzip
-        [SSZipArchive unzipFileAtPath:currentpath toDestination:unzipPath];
-
-        NSDictionary *dict = [self JSONFromFile];s
-
-        // NSArray *colours = [dict objectForKey:@"colors"];
-    }    
-
-    // if (echo != nil && [echo length] > 0) {
-    //     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
-    // } else {
-    //     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    // }
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-- (NSDictionary *)JSONFromFile
-{
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"file" ofType:@"json"];
-    NSData *data = [NSData dataWithContentsOfFile:path];
-    return [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        //lê o arquivo gzip salvo
+        NSString *str;
+        GzipInputStream *is = [[GzipInputStream alloc] initWithFileAtPath:zipPath];
+        [is open];
+        NSString *line;
+        while ((line = [is readLine])) {
+            // do something with line
+            if (!str) {
+                str = line;
+            } else {
+                str = [str stringByAppendingString:line];
+            }
+        }
+        [is close];
+        
+        //remove o arquivo
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error = nil;
+        [fileManager removeItemAtPath:zipPath error: &error];
+        
+        if (error) {
+            NSLog(@"Erro ao remover o arquivo zip:");
+            NSLog(@"%@",[error localizedDescription]);
+            
+            //Retorna erro
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:[[command.arguments objectAtIndex:0] callbackId]];
+        } else {
+            
+            //retorna o json
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:str];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:[command callbackId]];
+        }
+    } else {
+        NSLog(@"Erro ao salvar o arquivo zip");
+        
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Erro ao salvar o arquivo zip"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:[[command.arguments objectAtIndex:0] callbackId]];
+    }
 }
 
 @end
