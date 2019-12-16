@@ -25,5 +25,7 @@
             </feature>
         </config-file>
         <source-file src="src/ios/DevZip.m" />
+        <header-file src="src/ios/GzipInputStream/GzipInputStream.h" />
+        <source-file src="src/ios/GzipInputStream/GzipInputStream.m" />
     </platform>
 </plugin>
