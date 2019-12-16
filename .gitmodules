@@ -1,3 +1,0 @@
-[submodule "src/ios/GzipInputStream"]
-	path = src/ios/GzipInputStream
-	url = https://github.com/mtrbean/GzipInputStream.git
