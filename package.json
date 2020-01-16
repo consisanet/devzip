@@ -1,6 +1,6 @@
 {
   "name": "cordova.plugin.devzip",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Decompress bytearray zip file",
   "cordova": {
     "id": "cordova.plugin.devzip",
@@ -9,11 +9,15 @@
       "ios"
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/consisanet/devbluetoothprinter.git"
+  },
   "keywords": [
     "ecosystem:cordova",
     "cordova-android",
     "cordova-ios"
   ],
-  "author": "Devionn",
+  "author": "Consisa",
   "license": "ISC"
 }
